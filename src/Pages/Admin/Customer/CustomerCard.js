@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import {
   Box, Card, CardContent, Typography, TextField, InputAdornment, IconButton, Paper,
-  Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow,
-  TableSortLabel, Button
+  Table, TableBody, TableCell, TableContainer, TableHead, 
+  TablePagination, TableRow,TableSortLabel, Button
 } from '@mui/material';
 import PeopleIcon from '@mui/icons-material/People';
 import BlockIcon from '@mui/icons-material/Block';
 import SearchIcon from '@mui/icons-material/Search';
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from '@mui/icons-material/Edit';                
 import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddIcon from '@mui/icons-material/Add';
@@ -62,7 +62,7 @@ const CustomerCard = () => {
   };
 
   const handleView = (customerId) => {
-    navigate(`/customers/${customerId}`);
+    navigate(`/customerview/${customerId}`);
   };
 
   const handleSearch = (event) => setSearchTerm(event.target.value.toLowerCase());
@@ -86,9 +86,12 @@ const CustomerCard = () => {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-        <Typography variant="h5" fontWeight={600}>Manage Customers</Typography>
-        <Button
+      <Box display="flex" justifyContent="space-between" 
+      alignItems="center" mb={2}>
+        <Typography variant="h5" fontWeight={600}>Manage Customers
+
+        </Typography>
+        <Button 
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
