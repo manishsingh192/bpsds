@@ -1,30 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Box, Card, CardContent, Typography, TextField, InputAdornment, IconButton, Paper,
-  Table, TableBody, TableCell, TableContainer, TableHead, 
-  TablePagination, TableRow,TableSortLabel, Button
+  Table, TableBody, TableCell, TableContainer, TableHead,
+  TablePagination, TableRow, TableSortLabel, Button
 } from '@mui/material';
-import PeopleIcon from '@mui/icons-material/People';
-import BlockIcon from '@mui/icons-material/Block';
-import SearchIcon from '@mui/icons-material/Search';
-import EditIcon from '@mui/icons-material/Edit';                
-import DeleteIcon from '@mui/icons-material/Delete';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import AddIcon from '@mui/icons-material/Add';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import {
+  Search as SearchIcon, Edit as EditIcon,
+  Delete as DeleteIcon, MoreVert as MoreVertIcon, Add as AddIcon, Visibility as VisibilityIcon,
+  CheckCircle as CheckCircleIcon, Block as BlockIcon
+} from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const customerHeadCells = [
   { id: 'index', label: 'S. No', sortable: false },
-  { id: 'customerId', label: 'Customer ID', sortable: true },
   { id: 'name', label: 'Name', sortable: true },
   { id: 'contact', label: 'Contact', sortable: false },
   { id: 'actions', label: 'Actions', sortable: false },
 ];
 
 const customerData = [
-  { id: 1, customerId: 'CU001', name: 'Michael Scott', contact: '1122334455' },
-  { id: 2, customerId: 'CU002', name: 'Pam Beesly', contact: '2233445566' },
+  { id: 1, name: 'Michael Scott', contact: '1122334455', blacklisted: false },
+  { id: 2, name: 'Pam Beesly', contact: '2233445566', blacklisted: true },
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -43,10 +39,9 @@ function stableSort(array, comparator) {
   const stabilized = array.map((el, index) => [el, index]);
   stabilized.sort((a, b) => {
     const cmp = comparator(a[0], b[0]);
-    if (cmp !== 0) return cmp;
-    return a[1] - b[1];
+    return cmp !== 0 ? cmp : a[1] - b[1];
   });
-  return stabilized.map(el => el[0]);
+  return stabilized.map((el) => el[0]);
 }
 
 const CustomerCard = () => {
@@ -57,12 +52,13 @@ const CustomerCard = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const handleAdd = () => {
-    navigate('/customerform');
-  };
-
-  const handleView = (customerId) => {
-    navigate(`/customerview/${customerId}`);
+  const handleAdd = () => navigate('/customerform');
+  const handleView = (customer) => navigate('/customerview', { state: { customer } });
+  const handleEdit = (customerId) => navigate(`/customeredit/${customerId}`);
+  const handleDelete = (customerId) => {
+    if (window.confirm('Are you sure you want to delete this customer?')) {
+      console.log(`Deleted customer: ${customerId}`);
+    }
   };
 
   const handleSearch = (event) => setSearchTerm(event.target.value.toLowerCase());
@@ -77,21 +73,26 @@ const CustomerCard = () => {
     setPage(0);
   };
 
-  const filteredCustomers = customerData.filter(row =>
-    row.name.toLowerCase().includes(searchTerm) ||
-    row.customerId.toLowerCase().includes(searchTerm)
+  const filteredCustomers = useMemo(() =>
+    customerData.filter(row =>
+      row.name.toLowerCase().includes(searchTerm)
+    ), [searchTerm]);
+
+  const sortedCustomers = useMemo(() =>
+    stableSort(filteredCustomers, getComparator(order, orderBy)),
+    [filteredCustomers, order, orderBy]
   );
 
   const emptyRows = Math.max(0, (1 + page) * rowsPerPage - filteredCustomers.length);
 
+  const activeCount = customerData.filter(c => !c.blacklisted).length;
+  const blacklistedCount = customerData.filter(c => c.blacklisted).length;
+
   return (
     <Box sx={{ p: 3 }}>
-      <Box display="flex" justifyContent="space-between" 
-      alignItems="center" mb={2}>
-        <Typography variant="h5" fontWeight={600}>Manage Customers
-
-        </Typography>
-        <Button 
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h5" fontWeight={600}>Manage Customers</Typography>
+        <Button
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
@@ -108,19 +109,18 @@ const CustomerCard = () => {
       </Box>
 
       <Box sx={{ display: 'flex', gap: 3, maxWidth: 800, mx: 'auto', mb: 4 }}>
-        <Card sx={{ flex: 1, borderRadius: 2, boxShadow: 3 }}>
-          <CardContent>
-            <Typography variant="h4" color="success.main" fontWeight={600}>0</Typography>
-            <Typography variant="subtitle1" fontWeight={500}>Active Customers</Typography>
-            <Typography variant="body2" color="text.secondary">(30 days)</Typography>
+        <Card sx={{ flex: 1, backgroundColor: '#e8f5e9', display: 'flex', alignItems: 'center', p: 2 }}>
+          <CheckCircleIcon sx={{ fontSize: 40, color: 'success.main', mr: 2 }} />
+          <CardContent sx={{ p: 0 }}>
+            <Typography variant="h4" color="success.main">{activeCount}</Typography>
+            <Typography>Active Customers</Typography>
           </CardContent>
         </Card>
-
-        <Card sx={{ flex: 1, borderRadius: 2, boxShadow: 3 }}>
-          <CardContent>
-            <Typography variant="h4" color="error.main" fontWeight={600}>0</Typography>
-            <Typography variant="subtitle1" fontWeight={500}>Blacklisted Customers</Typography>
-            <Typography variant="body2" color="text.secondary">(30 days)</Typography>
+        <Card sx={{ flex: 1, backgroundColor: '#fbe9e7', display: 'flex', alignItems: 'center', p: 2 }}>
+          <BlockIcon sx={{ fontSize: 40, color: 'error.main', mr: 2 }} />
+          <CardContent sx={{ p: 0 }}>
+            <Typography variant="h4" color="error.main">{blacklistedCount}</Typography>
+            <Typography>Blacklisted Customers</Typography>
           </CardContent>
         </Card>
       </Box>
@@ -138,11 +138,12 @@ const CustomerCard = () => {
               </InputAdornment>
             ),
           }}
+          sx={{ width: '300px' }}
         />
       </Box>
 
       <Typography variant="h6" sx={{ mb: 1 }}>Customer List</Typography>
-      <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
+      <TableContainer component={Paper}>
         <Table>
           <TableHead sx={{ backgroundColor: '#1565c0' }}>
             <TableRow>
@@ -157,7 +158,7 @@ const CustomerCard = () => {
                       active={orderBy === headCell.id}
                       direction={orderBy === headCell.id ? order : 'asc'}
                       onClick={() => handleRequestSort(headCell.id)}
-                      sx={{ color: '#fff', '&.Mui-active': { color: '#fff' } }}
+                      sx={{ color: '#fff' }}
                     >
                       {headCell.label}
                     </TableSortLabel>
@@ -169,40 +170,50 @@ const CustomerCard = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {stableSort(filteredCustomers, getComparator(order, orderBy))
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+            {sortedCustomers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => (
                 <TableRow key={row.id} hover>
                   <TableCell>{page * rowsPerPage + index + 1}</TableCell>
-                  <TableCell>{row.customerId}</TableCell>
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{row.contact}</TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', gap: 1 }}>
-                      <IconButton 
-                        size="small" 
+                      <IconButton
                         color="primary"
-                        onClick={() => handleView(row.customerId)}
+                        onClick={() => handleView(row)}
                         title="View"
                       >
                         <VisibilityIcon fontSize="small" />
                       </IconButton>
-                      <IconButton size="small" color="primary" title="Edit">
+                      <IconButton
+                        color="primary"
+                        onClick={() => handleEdit(row.id)}
+                        title="Edit"
+                      >
                         <EditIcon fontSize="small" />
                       </IconButton>
-                      <IconButton size="small" color="error" title="Delete">
+                      <IconButton
+                        color="error"
+                        onClick={() => handleDelete(row.id)}
+                        title="Delete"
+                      >
                         <DeleteIcon fontSize="small" />
                       </IconButton>
-                      <IconButton size="small" title="More options">
+                      <IconButton title="More options">
                         <MoreVertIcon fontSize="small" />
                       </IconButton>
                     </Box>
                   </TableCell>
                 </TableRow>
               ))}
+            {sortedCustomers.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={4} align="center">No customers found</TableCell>
+              </TableRow>
+            )}
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
-                <TableCell colSpan={5} />
+                <TableCell colSpan={4} />
               </TableRow>
             )}
           </TableBody>

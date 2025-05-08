@@ -1,305 +1,112 @@
 import React from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
 import {
   Box,
-  Button,
-  Grid,
-  TextField,
-  InputAdornment,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  IconButton,
   Typography,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
+  Paper,
+  Grid,
+  Divider,
+  Avatar,
+  Stack,
+  Card,
+  CardContent
 } from '@mui/material';
-import {
-  Close,
-  LocalPhone,
-  Email,
-  Home,
-  LocationOn,
-  PinDrop,
-} from '@mui/icons-material';
+import { Person, Home, InsertDriveFile } from '@mui/icons-material';
 
-// Constants for state-city data
-const STATE_CITY_MAP = {
-  'Uttar Pradesh': ['Noida', 'Lucknow', 'Ghaziabad'],
-  Maharashtra: ['Mumbai', 'Pune', 'Nagpur'],
-  Delhi: ['New Delhi', 'Dwarka', 'Rohini'],
+const customer = {
+  firstName: 'Rohit',
+  middleName: 'Kumar',
+  lastName: 'Sharma',
+  contactNumber: '9876543210',
+  email: 'rohit@example.com',
+  address: '123, Sector 15',
+  state: 'Uttar Pradesh',
+  city: 'Noida',
+  district: 'Gautam Buddha Nagar',
+  pincode: '201301',
+  idProof: 'Aadhar Card',
+  idPhoto: '/uploads/id-photo.png',
+  customerPhoto: '/uploads/customer-photo.png'
 };
-const STATES = Object.keys(STATE_CITY_MAP);
 
-const CustomerView = ({ open, onClose, onSubmit }) => {
-  // Validation Schema
-  const validationSchema = Yup.object().shape({
-    stationName: Yup.string().required('Station name is required'),
-    contact: Yup.string()
-      .matches(/^[0-9]{10}$/, 'Contact number must be 10 digits')
-      .required('Contact number is required'),
-    email: Yup.string().email('Invalid email').required('Email is required'),
-    address: Yup.string().required('Address is required'),
-    street: Yup.string().required('Street is required'),
-    state: Yup.string().required('State is required'),
-    city: Yup.string().required('City is required'),
-    pinCode: Yup.string()
-      .matches(/^\d{6}$/, 'PIN code must be 6 digits')
-      .required('PIN code is required'),
-  });
+const InfoRow = ({ label, value }) => (
+  <Grid item xs={12} sm={6} md={4}>
+    <Typography variant="body2" fontWeight={600}>{label}</Typography>
+    <Typography variant="body1" color="text.secondary">{value}</Typography>
+  </Grid>
+);
 
-  // Formik setup
-  const formik = useFormik({
-    initialValues: {
-      stationName: '',
-      contact: '',
-      email: '',
-      address: '',
-      street: '',
-      state: '',
-      city: '',
-      pinCode: '',
-    },
-    validationSchema,
-    onSubmit: (values) => {
-      onSubmit(values);
-      formik.resetForm();
-      onClose();
-    },
-  });
-
-  const handleClose = () => {
-    formik.resetForm();
-    formik.setTouched({});
-    onClose();
-  };
-
+const CustomerView = () => {
   return (
-    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="md">
-      <DialogTitle>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography variant="h5">Add New Station</Typography>
-          <IconButton onClick={handleClose} aria-label="close">
-            <Close />
-          </IconButton>
-        </Box>
-      </DialogTitle>
+    <Box sx={{ p: { xs: 2, md: 4 }, maxWidth: 1200, mx: 'auto' }}>
+      <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
+        <Typography variant="h4" align="center" fontWeight={600} gutterBottom>
+          Customer Details
+        </Typography>
 
-      <form onSubmit={formik.handleSubmit} noValidate autoComplete="off">
-        <DialogContent dividers>
-          <Grid container spacing={3} sx={{ pt: 1 }}>
-            {/* Station Name */}
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                id="stationName"
-                name="stationName"
-                label="Station Name"
-                value={formik.values.stationName}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.stationName && Boolean(formik.errors.stationName)}
-                helperText={formik.touched.stationName && formik.errors.stationName}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Home color="action" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
+        <Card sx={{ mt: 3, p: 2 }}>
+          <CardContent>
+            <Stack direction="row" spacing={1} alignItems="center" mb={2}>
+              <Person color="primary" />
+              <Typography variant="h6">Personal Information</Typography>
+            </Stack>
+            <Divider sx={{ mb: 2 }} />
+            <Grid container spacing={2}>
+              <InfoRow label="First Name" value={customer.firstName} />
+              <InfoRow label="Middle Name" value={customer.middleName} />
+              <InfoRow label="Last Name" value={customer.lastName} />
+              <InfoRow label="Contact Number" value={customer.contactNumber} />
+              <InfoRow label="Email" value={customer.email} />
             </Grid>
+          </CardContent>
+        </Card>
 
-            {/* Contact and Email */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                id="contact"
-                name="contact"
-                label="Contact Number"
-                value={formik.values.contact}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.contact && Boolean(formik.errors.contact)}
-                helperText={formik.touched.contact && formik.errors.contact}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LocalPhone color="action" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
+        <Card sx={{ mt: 3, p: 2 }}>
+          <CardContent>
+            <Stack direction="row" spacing={1} alignItems="center" mb={2}>
+              <Home color="primary" />
+              <Typography variant="h6">Address Information</Typography>
+            </Stack>
+            <Divider sx={{ mb: 2 }} />
+            <Grid container spacing={2}>
+              <InfoRow label="Address" value={customer.address} />
+              <InfoRow label="State" value={customer.state} />
+              <InfoRow label="City" value={customer.city} />
+              <InfoRow label="District" value={customer.district} />
+              <InfoRow label="Pincode" value={customer.pincode} />
             </Grid>
+          </CardContent>
+        </Card>
 
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                id="email"
-                name="email"
-                label="Email ID"
-                type="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.email && Boolean(formik.errors.email)}
-                helperText={formik.touched.email && formik.errors.email}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Email color="action" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
+        <Card sx={{ mt: 3, p: 2 }}>
+          <CardContent>
+            <Stack direction="row" spacing={1} alignItems="center" mb={2}>
+              <InsertDriveFile color="primary" />
+              <Typography variant="h6">Documents</Typography>
+            </Stack>
+            <Divider sx={{ mb: 2 }} />
+            <Grid container spacing={2}>
+              <InfoRow label="ID Proof Type" value={customer.idProof} />
+              <Grid item xs={12} sm={6} md={4}>
+                <Typography variant="body2" fontWeight={600}>ID Photo</Typography>
+                <Avatar
+                  src={customer.idPhoto}
+                  variant="rounded"
+                  sx={{ width: 100, height: 100, mt: 1 }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={4}>
+                <Typography variant="body2" fontWeight={600}>Customer Photo</Typography>
+                <Avatar
+                  src={customer.customerPhoto}
+                  variant="rounded"
+                  sx={{ width: 100, height: 100, mt: 1 }}
+                />
+              </Grid>
             </Grid>
-
-            {/* Address */}
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                id="address"
-                name="address"
-                label="Address"
-                multiline
-                rows={3}
-                value={formik.values.address}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.address && Boolean(formik.errors.address)}
-                helperText={formik.touched.address && formik.errors.address}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LocationOn color="action" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-
-            {/* Street */}
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                id="street"
-                name="street"
-                label="Street"
-                value={formik.values.street}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.street && Boolean(formik.errors.street)}
-                helperText={formik.touched.street && formik.errors.street}
-              />
-            </Grid>
-
-            {/* State Dropdown */}
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth error={formik.touched.state && Boolean(formik.errors.state)}>
-                <InputLabel id="state-label">State</InputLabel>
-                <Select
-                  id="state"
-                  name="state"
-                  labelId="state-label"
-                  value={formik.values.state}
-                  label="State"
-                  onChange={(e) => {
-                    formik.setFieldValue('state', e.target.value);
-                    formik.setFieldValue('city', '');
-                  }}
-                  onBlur={formik.handleBlur}
-                >
-                  {STATES.map((state) => (
-                    <MenuItem key={state} value={state}>
-                      {state}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {formik.touched.state && formik.errors.state && (
-                  <Typography variant="caption" color="error">
-                    {formik.errors.state}
-                  </Typography>
-                )}
-              </FormControl>
-            </Grid>
-
-            {/* City Dropdown */}
-            <Grid item xs={12} sm={6}>
-              <FormControl fullWidth error={formik.touched.city && Boolean(formik.errors.city)}>
-                <InputLabel id="city-label">City</InputLabel>
-                <Select
-                  id="city"
-                  name="city"
-                  labelId="city-label"
-                  value={formik.values.city}
-                  label="City"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  disabled={!formik.values.state}
-                >
-                  {(STATE_CITY_MAP[formik.values.state] || []).map((city) => (
-                    <MenuItem key={city} value={city}>
-                      {city}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {formik.touched.city && formik.errors.city && (
-                  <Typography variant="caption" color="error">
-                    {formik.errors.city}
-                  </Typography>
-                )}
-              </FormControl>
-            </Grid>
-
-            {/* PIN Code */}
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                id="pinCode"
-                name="pinCode"
-                label="PIN Code"
-                value={formik.values.pinCode}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                error={formik.touched.pinCode && Boolean(formik.errors.pinCode)}
-                helperText={formik.touched.pinCode && formik.errors.pinCode}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PinDrop color="action" />
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-          </Grid>
-        </DialogContent>
-
-        <DialogActions sx={{ p: 3 }}>
-          <Button onClick={handleClose} variant="outlined" sx={{ mr: 2 }}>
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            color="primary"
-            variant="contained"
-            disabled={!formik.dirty || !formik.isValid || formik.isSubmitting}
-            sx={{
-              backgroundColor: '#0155a5',
-              '&:hover': {
-                backgroundColor: '#013f71',
-              },
-            }}
-          >
-            Save Station View
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
+          </CardContent>
+        </Card>
+      </Paper>
+    </Box>
   );
 };
 

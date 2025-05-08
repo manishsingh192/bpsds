@@ -15,9 +15,8 @@ import LedgerCard from '../Pages/Admin/Ledger/LedgerCard';
 import UserCard from '../Pages/Admin/Manage User/UserCard';
 import StationCard from '../Pages/Admin/Manage Station/StationCard';
 import StationForm from '../Pages/Admin/Manage Station/Form/StationForm';
-import Customer from '../Pages/Admin/Customer/CustomerCard'
+// import Customer from '../Pages/Admin/Customer/CustomerCard'
 import CustomerForm from '../Pages/Admin/Customer/Form/CustomerForm';
-// import Customer from '../Pages/Admin/Customer/Form/CustomerView';
 import CustomerView from '../Pages/Admin/Customer/Form/CustomerView';
 const MainRoute = () => {
     const isAuthenticated = true; // Replace with real auth check
@@ -32,13 +31,11 @@ const MainRoute = () => {
                 <Route path='/delivery' element={<DeliveryCard />} />
                 <Route path='/driver' element={<DriverCard />} />
                 <Route path='/vehicle' element={<VehicleCard />} />
-                <Route path='/customer' element={<CustomerCard />} />
                 <Route path='/tracker' element={<TrackerCard />} />
                 <Route path='/quotation' element={<QuotationCard />} />
                 <Route path='/ladger' element={<LedgerCard />} />
                 <Route path='/users' element={<UserCard />} />
                 <Route path='/station' element={<StationCard />} />
-                <Route path='/contact' element={<ContactCard />} />
                 <Route path='/stationform' element={<StationForm />} />
                 <Route path='/customerform' element={<CustomerForm />} />
                 <Route path='/customerview' element={< CustomerView />} />
