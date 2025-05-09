@@ -18,11 +18,6 @@ const customerHeadCells = [
   { id: 'actions', label: 'Actions', sortable: false },
 ];
 
-const customerData = [
-  { id: 1, name: 'Michael Scott', contact: '1122334455', blacklisted: false },
-  { id: 2, name: 'Pam Beesly', contact: '2233445566', blacklisted: true },
-];
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) return -1;
   if (b[orderBy] > a[orderBy]) return 1;
@@ -46,6 +41,10 @@ function stableSort(array, comparator) {
 
 const CustomerCard = () => {
   const navigate = useNavigate();
+  const [customers, setCustomers] = useState([
+    { id: 1, name: 'Michael Scott', contact: '1122334455', blacklisted: false },
+    { id: 2, name: 'Pam Beesly', contact: '2233445566', blacklisted: true },
+  ]);
   const [searchTerm, setSearchTerm] = useState('');
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
@@ -54,11 +53,19 @@ const CustomerCard = () => {
 
   const handleAdd = () => navigate('/customerform');
   const handleView = (customer) => navigate('/customerview', { state: { customer } });
-  const handleEdit = (customerId) => navigate(`/customeredit/${customerId}`);
+  const handleEdit = (customer) => navigate('/customerupdate', { state:{ customer }});
   const handleDelete = (customerId) => {
     if (window.confirm('Are you sure you want to delete this customer?')) {
-      console.log(`Deleted customer: ${customerId}`);
+      setCustomers((prev) => prev.filter(c => c.id !== customerId));
     }
+  };
+
+  const handleUpdate = (customerId) => {
+    setCustomers(prev =>
+      prev.map(c =>
+        c.id === customerId ? { ...c, name: c.name + ' (Updated)' } : c
+      )
+    );
   };
 
   const handleSearch = (event) => setSearchTerm(event.target.value.toLowerCase());
@@ -74,9 +81,9 @@ const CustomerCard = () => {
   };
 
   const filteredCustomers = useMemo(() =>
-    customerData.filter(row =>
+    customers.filter(row =>
       row.name.toLowerCase().includes(searchTerm)
-    ), [searchTerm]);
+    ), [customers, searchTerm]);
 
   const sortedCustomers = useMemo(() =>
     stableSort(filteredCustomers, getComparator(order, orderBy)),
@@ -84,9 +91,8 @@ const CustomerCard = () => {
   );
 
   const emptyRows = Math.max(0, (1 + page) * rowsPerPage - filteredCustomers.length);
-
-  const activeCount = customerData.filter(c => !c.blacklisted).length;
-  const blacklistedCount = customerData.filter(c => c.blacklisted).length;
+  const activeCount = customers.filter(c => !c.blacklisted).length;
+  const blacklistedCount = customers.filter(c => c.blacklisted).length;
 
   return (
     <Box sx={{ p: 3 }}>
@@ -178,28 +184,16 @@ const CustomerCard = () => {
                   <TableCell>{row.contact}</TableCell>
                   <TableCell>
                     <Box sx={{ display: 'flex', gap: 1 }}>
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleView(row)}
-                        title="View"
-                      >
+                      <IconButton color="primary" onClick={() => handleView(row)} title="View">
                         <VisibilityIcon fontSize="small" />
                       </IconButton>
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleEdit(row.id)}
-                        title="Edit"
-                      >
+                      <IconButton color="primary" onClick={() => handleEdit(row.id)} title="Edit">
                         <EditIcon fontSize="small" />
                       </IconButton>
-                      <IconButton
-                        color="error"
-                        onClick={() => handleDelete(row.id)}
-                        title="Delete"
-                      >
+                      <IconButton color="error" onClick={() => handleDelete(row.id)} title="Delete">
                         <DeleteIcon fontSize="small" />
                       </IconButton>
-                      <IconButton title="More options">
+                      <IconButton title="Mock Update" onClick={() => handleUpdate(row.id)}>
                         <MoreVertIcon fontSize="small" />
                       </IconButton>
                     </Box>
