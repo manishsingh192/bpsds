@@ -55,39 +55,49 @@ const DeliveryCard = () => {
                 </Box>
             </Box>
 
-            {/* Small Dropdown Section */}
-            <Box sx={{ display: 'flex', gap: 2, padding: 3, flexWrap: 'wrap', alignItems: 'center' }}>
-                <FormControl size="small" sx={{ minWidth: 150 }}>
-                    <InputLabel>Driver</InputLabel>
-                    <Select defaultValue="">
-                        <MenuItem value="">None</MenuItem>
-                        <MenuItem value="Driver 1">Driver 1</MenuItem>
-                        <MenuItem value="Driver 2">Driver 2</MenuItem>
-                    </Select>
-                </FormControl>
+             {/* Small Dropdown Section */}
+<Box
+  sx={{
+    display: 'flex',
+    gap: 2,
+    padding: 3,
+    flexWrap: 'wrap',
+    alignItems: 'center',
+  }}
+>
+  <FormControl size="small" sx={{ minWidth: 150 }}>
+    <InputLabel>Driver</InputLabel>
+    <Select defaultValue="">
+      <MenuItem value="">None</MenuItem>
+      <MenuItem value="Driver 1">Driver 1</MenuItem>
+      <MenuItem value="Driver 2">Driver 2</MenuItem>
+    </Select>
+  </FormControl>
 
-                <FormControl size="small" sx={{ minWidth: 150 }}>
-                    <InputLabel>Vehicle</InputLabel>
-                    <Select defaultValue="">
-                        <MenuItem value="">None</MenuItem>
-                        <MenuItem value="Vehicle 1">Vehicle 1</MenuItem>
-                        <MenuItem value="Vehicle 2">Vehicle 2</MenuItem>
-                    </Select>
-                </FormControl>
+  <FormControl size="small" sx={{ minWidth: 150 }}>
+    <InputLabel>Vehicle</InputLabel>
+    <Select defaultValue="">
+      <MenuItem value="">None</MenuItem>
+      <MenuItem value="Vehicle 1">Vehicle 1</MenuItem>
+      <MenuItem value="Vehicle 2">Vehicle 2</MenuItem>
+    </Select>
+  </FormControl>
 
-                <FormControl size="small" sx={{ minWidth: 150 }}>
-                    <InputLabel>Device</InputLabel>
-                    <Select defaultValue="">
-                        <MenuItem value="">None</MenuItem>
-                        <MenuItem value="Device 1">Device 1</MenuItem>
-                        <MenuItem value="Device 2">Device 2</MenuItem>
-                    </Select>
-                </FormControl>
+  <FormControl size="small" sx={{ minWidth: 150 }}>
+    <InputLabel>Device</InputLabel>
+    <Select defaultValue="">
+      <MenuItem value="">None</MenuItem>
+      <MenuItem value="Device 1">Device 1</MenuItem>
+      <MenuItem value="Device 2">Device 2</MenuItem>
+    </Select>
+  </FormControl>
 
-                <Button variant="contained" size="small" sx={{ height: 40 }}>
-                    Add
-                </Button>
-            </Box>
+  <Box sx={{ marginLeft: 'auto' }}>
+    <Button variant="contained" size="small" sx={{ height: 40 }}>
+      Add
+    </Button>
+  </Box>
+</Box>
 
             {/* Table Header Row */}
             <Box sx={{
