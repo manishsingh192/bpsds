@@ -98,7 +98,9 @@ const StationCard = () => {
         </Button>
       </Box>
 
-      <Card sx={{ m: 2, boxShadow: 3, p: 2, backgroundColor: '#0155a5', color: '#ffffff' }}>
+      <Card sx={{ m: 2, boxShadow: 3, p: 2, 
+      backgroundColor: '#0155a5', 
+        color: '#ffffff' }}>
         <CardContent>
           <Stack direction="row" spacing={2} alignItems="center" justifyContent="center">
             <CustomCarIcon width={74} height={77} />
