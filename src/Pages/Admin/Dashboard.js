@@ -89,9 +89,9 @@ const Dashboard = () => {
       </Typography>
 
       {/* Row 1 - 4 Cards */}
-      <Grid container spacing={3} sx={{ mb: 3 }}>
+      <Grid container spacing={2} sx={{ mb: 3 }}>
         {summaryData.slice(0, 4).map((item, index) => (
-          <Grid item xs={12} sm={6} md={3} key={index} sx={{ height: '100%' }}>
+          <Grid size={{ xs:12, sm:6, md:3 }}  key={index} sx={{ height: '100%' }}>
             <Card sx={cardStyles}>
               <Avatar sx={{ bgcolor: 'primary.main', width: 56, height: 56 }}>
                 {item.icon}
